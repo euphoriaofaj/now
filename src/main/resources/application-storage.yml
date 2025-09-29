@@ -1,0 +1,17 @@
+spring:
+  servlet:
+    multipart:
+      max-file-size: 8MB
+      max-request-size: 8MB
+
+
+app:
+  storage:
+    type: ${APP_STORAGE_TYPE:local}
+    public-base-url: ${APP_STORAGE_PUBLIC_BASE_URL:http://localhost:8080/uploads}
+    local:
+      root: ${APP_STORAGE_LOCAL_ROOT:${USER_HOME:/tmp}/morago/uploads}
+    s3:
+      bucket: ${APP_STORAGE_S3_BUCKET:morago-files}
+      region: ${APP_STORAGE_S3_REGION:ap-northeast-2}
+      key-prefix: ${APP_STORAGE_S3_KEY_PREFIX:uploads}

@@ -1,0 +1,10 @@
+ALTER TABLE users
+  ADD COLUMN reserved DECIMAL(19,2) NULL,
+  ADD COLUMN version  BIGINT NULL;
+
+UPDATE users SET reserved = 0.00 WHERE reserved IS NULL;
+UPDATE users SET version  = 0    WHERE version  IS NULL;
+
+ALTER TABLE users
+  MODIFY COLUMN reserved DECIMAL(19,2) NOT NULL DEFAULT 0.00,
+  MODIFY COLUMN version  BIGINT        NOT NULL DEFAULT 0;

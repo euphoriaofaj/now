@@ -1,0 +1,1 @@
+CREATE INDEX idx_ratings_translator ON ratings (translator_profile_id);

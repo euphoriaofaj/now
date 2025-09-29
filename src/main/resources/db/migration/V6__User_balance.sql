@@ -1,0 +1,4 @@
+UPDATE users SET balance = 0.00 WHERE balance IS NULL;
+
+ALTER TABLE users
+  MODIFY COLUMN balance DECIMAL(19,2) NOT NULL DEFAULT 0.00;
