@@ -5,6 +5,7 @@ import com.morago.backend.entity.enumFiles.CallStatus;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -15,4 +16,6 @@ public interface CallRepository extends JpaRepository<Call, Long> {
 
     Optional<Call> findTopByCaller_IdAndRecipient_IdAndTranslatorHasJoinedTrueAndEndCallTrueOrderByCreatedAtDesc(
             Long callerId, Long recipientId);
+
+    List<Call> findByCallerIdOrRecipientIdOrderByCreatedAtDesc(Long callerId, Long recipientId);
 }
