@@ -10,4 +10,6 @@ public interface NotificationService {
     NotificationDto getById(Long id);
     List<NotificationDto> getAll();
     void delete(Long id);
+    List<NotificationDto> getMyNotifications();
+    void clearMyNotifications();
 }

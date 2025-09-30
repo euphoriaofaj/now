@@ -12,14 +12,17 @@ import com.morago.backend.service.user.UserService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -102,5 +105,20 @@ public class UserController {
     public ResponseEntity<UserUpdateProfileResponseDto> updateProfile(
             @Valid @RequestBody UserUpdateProfileRequestDto dto) {
         return ResponseEntity.ok(userService.updateMyProfile(dto));
+    }
+
+    @Operation(
+            summary = "Delete profile",
+            description = "Delete user's profile and account.",
+            responses = {
+                    @ApiResponse(responseCode = "204", description = "Profile deleted successfully"),
+                    @ApiResponse(responseCode = "401", description = "Unauthorized"),
+                    @ApiResponse(responseCode = "403", description = "Forbidden - USER role required")
+            }
+    )
+    @DeleteMapping("/profile")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteProfile() {
+        userService.deleteMyProfile();
     }
 }

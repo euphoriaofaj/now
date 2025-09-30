@@ -6,6 +6,7 @@ import com.morago.backend.dto.ThemeDto;
 import com.morago.backend.dto.user.UserUpdateProfileRequestDto;
 import com.morago.backend.dto.user.UserUpdateProfileResponseDto;
 import com.morago.backend.mapper.WithdrawalMapper;
+import com.morago.backend.service.profile.TranslatorProfileService;
 import com.morago.backend.service.theme.ThemeService;
 import com.morago.backend.service.user.UserService;
 import com.morago.backend.service.withdrawal.WithdrawalService;
@@ -15,14 +16,17 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -40,6 +44,7 @@ public class TranslatorController {
     private final ThemeService themeService;
     private final WithdrawalService withdrawalService;
     private final WithdrawalMapper withdrawalMapper;
+    private final TranslatorProfileService translatorProfileService;
 
     @Operation(
             summary = "Update profile",
@@ -106,11 +111,25 @@ public class TranslatorController {
         if (isOnline == null) {
             throw new IllegalArgumentException("isOnline field is required");
         }
-        
+
         var user = userService.getCurrentUser();
-        // This would need to be implemented in TranslatorProfileService
-        // translatorProfileService.setOnlineStatus(user, isOnline);
-        
+        translatorProfileService.setOnlineStatus(user, isOnline);
+
         return ResponseEntity.ok(Map.of("isOnline", isOnline));
+    }
+
+    @Operation(
+            summary = "Delete profile",
+            description = "Delete translator's profile and account.",
+            responses = {
+                    @ApiResponse(responseCode = "204", description = "Profile deleted successfully"),
+                    @ApiResponse(responseCode = "401", description = "Unauthorized"),
+                    @ApiResponse(responseCode = "403", description = "Forbidden - TRANSLATOR role required")
+            }
+    )
+    @DeleteMapping("/profile")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteProfile() {
+        userService.deleteMyProfile();
     }
 }

@@ -56,27 +56,6 @@ public class MeController {
     private final TransactionMapper transactionMapper;
     private final CallService callService;
 
-    @Operation(
-            summary = "Update profile",
-            description = "Allows an authenticated user to update their profile information.",
-            requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
-                    required = true,
-                    content = @Content(schema = @Schema(implementation = UserUpdateProfileRequestDto.class))
-            ),
-            responses = {
-                    @ApiResponse(responseCode = "200", description = "Profile updated successfully",
-                            content = @Content(schema = @Schema(implementation = UserUpdateProfileResponseDto.class))),
-                    @ApiResponse(responseCode = "400", description = "Invalid request data"),
-                    @ApiResponse(responseCode = "401", description = "Unauthorized"),
-                    @ApiResponse(responseCode = "403", description = "Forbidden")
-            }
-    )
-    @PatchMapping("/profile")
-    @PreAuthorize("hasAnyRole('USER','TRANSLATOR','ADMIN')")
-    public UserUpdateProfileResponseDto updateMyProfile(
-            @Valid @RequestBody UserUpdateProfileRequestDto dto) {
-        return userService.updateMyProfile(dto);
-    }
 
     @Operation(
             summary = "Change password",
@@ -152,8 +131,7 @@ public class MeController {
     @GetMapping("/notifications")
     @PreAuthorize("hasAnyRole('USER','TRANSLATOR')")
     public ResponseEntity<List<NotificationDto>> getMyNotifications() {
-        // This would need to be implemented in NotificationService
-        return ResponseEntity.ok(List.of());
+        return ResponseEntity.ok(notificationService.getMyNotifications());
     }
 
     @Operation(
@@ -168,7 +146,7 @@ public class MeController {
     @PreAuthorize("hasAnyRole('USER','TRANSLATOR')")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void clearMyNotifications() {
-        // This would need to be implemented in NotificationService
+        notificationService.clearMyNotifications();
     }
 
     @Operation(

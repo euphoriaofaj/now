@@ -269,6 +269,14 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional
+    public void deleteMyProfile() {
+        User user = getCurrentUser();
+        refreshTokenRepository.deleteByUser(user);
+        userRepository.delete(user);
+    }
+
+    @Override
     @PreAuthorize("hasRole('ADMIN')")
     @Transactional
     public void deleteUser(Long id) {
